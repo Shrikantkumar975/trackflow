@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
-        IMAGE_FRONTEND = 'yourdockerhub/trackflow-frontend'
-        IMAGE_BACKEND = 'yourdockerhub/trackflow-backend'
+        IMAGE_FRONTEND = 'shrikr975/trackflow-frontend'
+        IMAGE_BACKEND = 'shrikr975/trackflow-backend'
         IMAGE_TAG = "${env.BUILD_ID}"
     }
 
@@ -18,38 +18,38 @@ pipeline {
         stage('Install Dependencies & Test') {
             steps {
                 dir('backend') {
-                    sh 'npm install'
-                    sh 'npm test || echo "Skipping tests for demo"'
+                    bat 'npm install'
+                    bat 'npm test || echo "Skipping tests for demo"'
                 }
                 dir('frontend') {
-                    sh 'npm install'
+                    bat 'npm install'
                 }
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                sh "docker build -t ${IMAGE_FRONTEND}:${IMAGE_TAG} ./frontend"
-                sh "docker build -t ${IMAGE_BACKEND}:${IMAGE_TAG} ./backend"
-                sh "docker build -t ${IMAGE_FRONTEND}:latest ./frontend"
-                sh "docker build -t ${IMAGE_BACKEND}:latest ./backend"
+                bat "docker build -t ${IMAGE_FRONTEND}:${IMAGE_TAG} ./frontend"
+                bat "docker build -t ${IMAGE_BACKEND}:${IMAGE_TAG} ./backend"
+                bat "docker build -t ${IMAGE_FRONTEND}:latest ./frontend"
+                bat "docker build -t ${IMAGE_BACKEND}:latest ./backend"
             }
         }
 
         stage('Push Docker Images') {
             steps {
-                sh "echo \$DOCKER_HUB_CREDENTIALS_PSW | docker login -u \$DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                sh "docker push ${IMAGE_FRONTEND}:${IMAGE_TAG}"
-                sh "docker push ${IMAGE_BACKEND}:${IMAGE_TAG}"
-                sh "docker push ${IMAGE_FRONTEND}:latest"
-                sh "docker push ${IMAGE_BACKEND}:latest"
+                bat "echo %DOCKER_HUB_CREDENTIALS_PSW% | docker login -u %DOCKER_HUB_CREDENTIALS_USR% --password-stdin"
+                bat "docker push ${IMAGE_FRONTEND}:${IMAGE_TAG}"
+                bat "docker push ${IMAGE_BACKEND}:${IMAGE_TAG}"
+                bat "docker push ${IMAGE_FRONTEND}:latest"
+                bat "docker push ${IMAGE_BACKEND}:latest"
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
+                bat 'docker compose down || true'
+                bat 'docker compose up -d'
             }
         }
     }
