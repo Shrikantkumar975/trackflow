@@ -6,6 +6,7 @@ pipeline {
         IMAGE_FRONTEND = 'shrikr975/trackflow-frontend'
         IMAGE_BACKEND = 'shrikr975/trackflow-backend'
         IMAGE_TAG = "${env.BUILD_ID}"
+        DOCKER_HOST = 'tcp://localhost:2375'
     }
 
     stages {
