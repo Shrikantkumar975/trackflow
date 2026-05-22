@@ -39,7 +39,7 @@ pipeline {
 
         stage('Push Docker Images') {
             steps {
-                bat "echo %DOCKER_HUB_CREDENTIALS_PSW% | docker login -u %DOCKER_HUB_CREDENTIALS_USR% --password-stdin"
+                bat "echo %DOCKER_HUB_CREDENTIALS_PSW%| docker login -u %DOCKER_HUB_CREDENTIALS_USR% --password-stdin"
                 bat "docker push ${IMAGE_FRONTEND}:${IMAGE_TAG}"
                 bat "docker push ${IMAGE_BACKEND}:${IMAGE_TAG}"
                 bat "docker push ${IMAGE_FRONTEND}:latest"
