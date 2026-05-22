@@ -12,6 +12,9 @@ services:
     restart: always
     environment:
       - PORT=5000
+      - MONGO_URI=mongodb://database:27017/trackflow
+    depends_on:
+      - database
 
   nginx:
     build:
@@ -22,3 +25,14 @@ services:
       - frontend
       - backend
     restart: always
+
+  database:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
